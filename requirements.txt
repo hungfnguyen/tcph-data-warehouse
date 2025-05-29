@@ -1,0 +1,22 @@
+# Data Processing
+polars>=0.20.0
+pandas>=2.0.0
+
+# Database Connections
+snowflake-connector-python>=3.0.0
+psycopg2-binary>=2.9.0
+sqlalchemy>=2.0.0
+
+# Object Storage
+minio>=7.0.0
+boto3>=1.26.0
+
+# Orchestration
+apache-airflow>=2.7.0
+
+# Data Quality
+great-expectations>=0.17.0
+
+# Utilities
+python-dotenv>=1.0.0
+pyyaml>=6.0
