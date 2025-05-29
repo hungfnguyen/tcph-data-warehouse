@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: tcph-postgres
+    environment:
+      POSTGRES_DB: tcph_dw
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tcph-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tcph_dw"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "8080:80"
+    networks:
+      - tcph-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  minio:
+    image: minio/minio:latest
+    container_name: tcph-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001
+    ports:
+      - "9000:9000"  # API endpoint
+      - "9001:9001"  # Web console
+    volumes:
+      - minio_data:/data
+    networks:
+      - tcph-network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  
+volumes:
+  postgres_data:
+  pgadmin_data:
+  minio_data:
+
+networks:
+  tcph-network:
+    driver: bridge
