@@ -54,6 +54,86 @@ services:
       timeout: 20s
       retries: 3
 
+  # Spark Services
+  spark-master:
+    build:
+      context: .
+      dockerfile: infrastructure/spark/Dockerfile
+    container_name: tcph-spark-master
+    env_file: .env
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "8081:8080"  # Spark Master Web UI
+      - "7077:7077"  # Spark Master port
+    volumes:
+      - ./spark-apps:/opt/spark-apps
+      - ./spark-data:/opt/spark-data
+    networks:
+      - tcph-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  spark-worker-1:
+    build:
+      context: .
+      dockerfile: infrastructure/spark/Dockerfile
+    container_name: tcph-spark-worker-1
+    env_file: .env
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    ports:
+      - "8082:8081"  # Worker Web UI
+    volumes:
+      - ./spark-apps:/opt/spark-apps
+      - ./spark-data:/opt/spark-data
+    networks:
+      - tcph-network
+    depends_on:
+      - spark-master
+
+  spark-worker-2:
+    build:
+      context: .
+      dockerfile: infrastructure/spark/Dockerfile
+    container_name: tcph-spark-worker-2
+    env_file: .env
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    ports:
+      - "8083:8081"  # Worker Web UI
+    volumes:
+      - ./spark-apps:/opt/spark-apps
+      - ./spark-data:/opt/spark-data
+    networks:
+      - tcph-network
+    depends_on:
+      - spark-master
+
+  spark-thrift:
+    build:
+      context: .
+      dockerfile: infrastructure/spark/Dockerfile
+    container_name: tcph-spark-thrift
+    env_file: .env
+    command: sh -c "sleep 20 && /opt/bitnami/spark/sbin/start-thriftserver.sh --master spark://spark-master:7077 --conf spark.sql.warehouse.dir=s3a://gold/warehouse/"
+    ports:
+      - "10000:10000"  # Thrift Server port (for DBT)
+      - "4040:4040"    # Spark SQL Web UI
+    volumes:
+      - ./spark-apps:/opt/spark-apps
+      - ./spark-data:/opt/spark-data
+    networks:
+      - tcph-network
+    depends_on:
+      - spark-master
+      - minio
+
   
 volumes:
   postgres_data:
