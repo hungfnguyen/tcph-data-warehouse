@@ -121,7 +121,7 @@ services:
       dockerfile: infrastructure/spark/Dockerfile
     container_name: tcph-spark-thrift
     env_file: .env
-    command: sh -c "sleep 20 && /opt/bitnami/spark/sbin/start-thriftserver.sh --master spark://spark-master:7077 --conf spark.sql.warehouse.dir=s3a://gold/warehouse/"
+    command: sh -c "sleep 20 && /opt/bitnami/spark/sbin/start-thriftserver.sh --master spark://spark-master:7077 --conf spark.cores.max=2 --conf spark.sql.warehouse.dir=s3a://gold/warehouse/"
     ports:
       - "10000:10000"  # Thrift Server port (for DBT)
       - "4040:4040"    # Spark SQL Web UI
