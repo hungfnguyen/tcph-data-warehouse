@@ -134,6 +134,32 @@ services:
       - spark-master
       - minio
 
+  spark-notebook:
+    build:
+      context: .
+      dockerfile: infrastructure/spark-notebook/Dockerfile
+    container_name: tcph-spark-notebook
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_DRIVER_HOST=spark-notebook
+      - SPARK_DRIVER_BINDADDRESS=0.0.0.0
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./infrastructure/spark-notebook/conf/spark-defaults.conf:/usr/local/spark/conf/spark-defaults.conf
+      - ./spark-apps:/opt/spark-apps
+      - ./spark-data:/opt/spark-data
+    ports:
+      - "8888:8888"    # Jupyter Lab
+      - "4043:4040"    # Spark UI
+      - "4041:4041"    # Additional Spark UI ports
+      - "4042:4042"
+    networks:
+      - tcph-network
+    depends_on:
+      - spark-master
+      - minio
+
   
 volumes:
   postgres_data:
