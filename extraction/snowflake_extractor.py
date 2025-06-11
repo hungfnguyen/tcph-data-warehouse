@@ -69,11 +69,11 @@ class SnowflakeExtractor:
         polars_df = pl.from_pandas(pandas_df)
         
         # Add metadata
-        polars_df = polars_df.with_columns([
-            pl.lit(datetime.now()).alias("_extracted_at"),
-            pl.lit("snowflake").alias("_source"),
-            pl.lit(table_name.lower()).alias("_table")
-        ])
+        # polars_df = polars_df.with_columns([
+        #     pl.lit(datetime.now()).alias("_extracted_at"),
+        #     pl.lit("snowflake").alias("_source"),
+        #     pl.lit(table_name.lower()).alias("_table")
+        # ])
         
         logger.info(f"Extracted {table_name}: {len(polars_df):,} rows")
         return polars_df
@@ -124,6 +124,51 @@ class SnowflakeExtractor:
         
         return data
     
+    def extract_table_batches(self, table_name: str):
+        """Extract table batch by batch, yield immediately"""
+        logger.info(f"Extracting {table_name} in batches...")
+        
+        table_config = TPC_H_TABLES[table_name]
+        
+        if table_config['size'] in ['tiny', 'small']:
+            # Small table, extract all
+            query = f"SELECT * FROM {table_name}"
+            pandas_df = pd.read_sql(query, self.engine)
+            polars_df = pl.from_pandas(pandas_df)
+            
+            logger.info(f"Batch 1: {len(polars_df):,} rows")
+            yield polars_df
+        else:
+            # Large table, extract in batches
+            chunk_size = table_config['chunk_size']
+            primary_key = table_config['primary_key']
+            
+            if isinstance(primary_key, list):
+                order_by = ', '.join(primary_key)
+            else:
+                order_by = primary_key
+            
+            # Get total rows
+            cursor = self.conn.cursor()
+            cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+            total_rows = cursor.fetchone()[0]
+            
+            logger.info(f"Extracting {total_rows:,} rows in batches of {chunk_size:,}")
+            
+            batch_num = 1
+            for offset in range(0, total_rows, chunk_size):
+                query = f"""
+                    SELECT * FROM {table_name} 
+                    ORDER BY {order_by}
+                    LIMIT {chunk_size} OFFSET {offset}
+                """
+                pandas_df = pd.read_sql(query, self.engine)
+                polars_df = pl.from_pandas(pandas_df)
+                
+                logger.info(f"Batch {batch_num}: {len(polars_df):,} rows")
+                yield polars_df
+                batch_num += 1
+
     def close(self):
         if self.conn:
             self.conn.close()

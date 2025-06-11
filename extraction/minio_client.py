@@ -78,9 +78,31 @@ class MinIOClient:
         logger.info(f"Read {table_name}: {len(df):,} rows from bronze/{object_name}")
         return df
     
-    def list_bronze_files(self) -> List[str]:
-        objects = self.client.list_objects('bronze', prefix='tpch/', recursive=True)
-        return [obj.object_name for obj in objects]
+    def save_table_batches(self, table_name: str, df_batches):
+        saved_paths = []
+        batch_num = 1
+        
+        for df in df_batches:
+            # Simple path without run_id
+            object_name = f"{table_name.lower()}/batch_{batch_num:03d}.parquet"
+            
+            buffer = io.BytesIO()
+            df.write_parquet(buffer)
+            buffer.seek(0)
+            
+            self.client.put_object(
+                bucket_name='bronze',
+                object_name=object_name,
+                data=buffer,
+                length=buffer.getbuffer().nbytes,
+                content_type='application/parquet'
+            )
+            
+            saved_paths.append(f"bronze/{object_name}")
+            logger.info(f"Saved {table_name} batch {batch_num}: {len(df):,} rows")
+            batch_num += 1
+        
+        return saved_paths
 
 
 # Convenience functions
