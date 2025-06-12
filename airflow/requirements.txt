@@ -1,0 +1,14 @@
+pyspark==3.5.0
+minio==7.2.12
+apache-airflow[amazon]
+apache-airflow-providers-apache-spark==4.11.3
+apache-airflow-providers-common-compat==1.2.2
+apache-airflow-providers-snowflake==5.8.1
+snowflake-snowpark-python==1.25.0
+dbt-snowflake==1.9.0
+polars==1.30.0
+snowflake-connector-python==3.15.0
+snowflake-sqlalchemy==1.7.3
+SQLAlchemy==1.4.53
+python-dotenv==1.1.0
+dotenv==0.9.9
