@@ -44,7 +44,7 @@ make run-pipeline
 
 ## Key Metrics
 
-- **8 source tables** → **4 fact tables + 5 dimensions**
+- **8 source tables** → **3 fact tables + 4 dimensions**
 - **6M+ records** processed through medallion layers
 - **Sub-second query performance** on star schema
 - **99%+ data quality** score with automated validation
