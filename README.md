@@ -3,7 +3,12 @@
 > Modern data warehouse pipeline with medallion architecture using TPC-H benchmark dataset
 
 ## Architecture
+### Pipeline Overview
 ![Architecture](images/architecture.jpg)
+
+### Data Warehouse Schema
+![Data Warehouse Schema](images/dw_architecture.png)
+
 
 ## Quick Start
 
