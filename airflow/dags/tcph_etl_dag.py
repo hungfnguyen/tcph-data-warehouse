@@ -15,7 +15,6 @@ import io
 
 logger = logging.getLogger(__name__)
 
-# ===== Configuration =====
 
 
 MINIO_CONFIG = {
