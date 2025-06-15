@@ -16,14 +16,14 @@ SNOWFLAKE_CONFIG = {
 
 # TPC-H table configurations
 TPC_H_TABLES = {
-    'REGION': {'size': 'tiny', 'chunk_size': 100, 'primary_key': 'R_REGIONKEY'},
-    'NATION': {'size': 'tiny', 'chunk_size': 100, 'primary_key': 'N_NATIONKEY'},
-    'SUPPLIER': {'size': 'small', 'chunk_size': 25000, 'primary_key': 'S_SUPPKEY'},
-    'CUSTOMER': {'size': 'medium', 'chunk_size': 50000, 'primary_key': 'C_CUSTKEY'},
-    'PART': {'size': 'medium', 'chunk_size': 100000, 'primary_key': 'P_PARTKEY'},
-    'PARTSUPP': {'size': 'large', 'chunk_size': 200000, 'primary_key': ['PS_PARTKEY', 'PS_SUPPKEY']},
-    'ORDERS': {'size': 'large', 'chunk_size': 200000, 'primary_key': 'O_ORDERKEY'},
-    'LINEITEM': {'size': 'huge', 'chunk_size': 500000, 'primary_key': ['L_ORDERKEY', 'L_LINENUMBER']}
+    'REGION': {'chunk_size': 100, 'primary_key': 'R_REGIONKEY'},
+    'NATION': {'chunk_size': 100, 'primary_key': 'N_NATIONKEY'},
+    'SUPPLIER': {'chunk_size': 25000, 'primary_key': 'S_SUPPKEY'},
+    'CUSTOMER': {'chunk_size': 50000, 'primary_key': 'C_CUSTKEY'},
+    'PART': {'chunk_size': 100000, 'primary_key': 'P_PARTKEY'},
+    'PARTSUPP': {'chunk_size': 200000, 'primary_key': 'PS_PARTKEY'}, # PARTKEY and SUPPKEY are composite
+    'ORDERS': {'chunk_size': 200000, 'primary_key': 'O_ORDERKEY'},
+    'LINEITEM': {'chunk_size': 500000, 'primary_key': 'L_ORDERKEY'} # ORDERKEY and LINENUMBER are composite
 }
 
 # MinIO config

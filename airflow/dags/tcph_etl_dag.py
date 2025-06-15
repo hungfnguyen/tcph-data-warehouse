@@ -12,29 +12,12 @@ from pyspark.sql.functions import col, trim, when, year, quarter, lit
 from minio import Minio
 import snowflake.connector
 import io
+import sys
+
+sys.path.append('/opt/airflow')
+from scripts.extraction.config import SNOWFLAKE_CONFIG, MINIO_CONFIG, TPC_H_TABLES
 
 logger = logging.getLogger(__name__)
-
-
-
-MINIO_CONFIG = {
-    'endpoint': 'minio:9000',
-    'access_key': 'minioadmin',
-    'secret_key': 'minioadmin123',
-    'secure': False
-}
-
-# Định nghĩa các bảng TPC-H và kích thước chunk để trích xuất
-TPC_H_TABLES = {
-    'REGION': {'chunk_size': 100, 'primary_key': 'R_REGIONKEY'},
-    'NATION': {'chunk_size': 100, 'primary_key': 'N_NATIONKEY'},
-    'SUPPLIER': {'chunk_size': 25000, 'primary_key': 'S_SUPPKEY'},
-    'CUSTOMER': {'chunk_size': 50000, 'primary_key': 'C_CUSTKEY'},
-    'PART': {'chunk_size': 100000, 'primary_key': 'P_PARTKEY'},
-    'PARTSUPP': {'chunk_size': 200000, 'primary_key': 'PS_PARTKEY'}, # PARTKEY and SUPPKEY are composite
-    'ORDERS': {'chunk_size': 200000, 'primary_key': 'O_ORDERKEY'},
-    'LINEITEM': {'chunk_size': 500000, 'primary_key': 'L_ORDERKEY'} # ORDERKEY and LINENUMBER are composite
-}
 
 default_args = {
     'owner': 'data_engineer',
