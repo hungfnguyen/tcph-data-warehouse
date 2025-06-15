@@ -34,4 +34,7 @@ models:
     staging:
       +materialized: view
     marts:
-      +materialized: table
+      dimensions:
+        +materialized: table
+      core:
+        +materialized: table

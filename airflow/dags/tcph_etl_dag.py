@@ -20,11 +20,12 @@ from scripts.extraction.config import SNOWFLAKE_CONFIG, MINIO_CONFIG, TPC_H_TABL
 logger = logging.getLogger(__name__)
 
 default_args = {
-    'owner': 'data_engineer',
+    'owner': 'hungfnguyen',
     'retries': 2,
     'retry_delay': timedelta(minutes=5),
     'depends_on_past': False,
-    'email_on_failure': False
+    'email_on_failure': False,
+    'email': ['hungfnguyen.de@gmail.com']
 }
 
 # Cấu hình Spark mặc định cho các PySpark task
