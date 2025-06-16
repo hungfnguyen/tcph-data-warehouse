@@ -70,6 +70,8 @@ services:
     volumes:
       - ./spark-apps:/opt/spark-apps
       - ./spark-data:/opt/spark-data
+      - ./scripts/load_to_dw:/opt/spark-apps/jobs
+      - ./jars:/opt/spark-apps/jars
     networks:
       - tcph-network
     healthcheck:

@@ -36,5 +36,11 @@ models:
     marts:
       dimensions:
         +materialized: table
+        +file_format: parquet     # Force Parquet
+        +options:
+          compression: snappy
       core:
         +materialized: table
+        +file_format: parquet     # Force Parquet
+        +options:
+          compression: snappy
