@@ -1,6 +1,6 @@
 # TPC-H Data Warehouse
 
-> Modern data warehouse pipeline with medallion architecture using TPC-H benchmark dataset
+> Modern data warehouse pipeline with medallion architecture using the [TPC-H benchmark dataset on Snowflake](https://docs.snowflake.com/en/user-guide/sample-data-tpch).
 
 ## Architecture
 ### Pipeline Overview
