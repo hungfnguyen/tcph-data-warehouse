@@ -21,3 +21,5 @@ dbt/logs/
 Thumbs.db
 
 logs
+jars/aws-java-sdk-bundle-1.12.674.jar
+jars/hadoop-aws-3.3.4.jar

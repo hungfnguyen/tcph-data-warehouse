@@ -30,19 +30,19 @@ def load_gold_to_postgres(table_name):
             "driver": "org.postgresql.Driver"
         }
 
-        # ✅ Đọc Parquet từ MinIO
+        # Đọc Parquet từ MinIO
         path = f"s3a://gold/warehouse/gold.db/{table_name}"
         print(f"Reading Parquet from: {path}")
         
         df = spark.read.parquet(path)
         
         row_count = df.count()
-        print(f"✅ Successfully read {row_count} rows from Parquet")
+        print(f"Successfully read {row_count} rows from Parquet")
         df.printSchema()
         print("Sample data:")
         df.show(5, truncate=False)
 
-        # ✅ Ghi vào PostgreSQL
+        # Ghi vào PostgreSQL
         target_table = f"marts.{table_name}"
         print(f"Writing {row_count} rows to PostgreSQL table: {target_table}")
         
@@ -53,11 +53,11 @@ def load_gold_to_postgres(table_name):
             properties=pg_properties
         )
         
-        print(f"🎉 SUCCESS: Loaded {row_count} rows to {target_table}")
+        print(f"SUCCESS: Loaded {row_count} rows to {target_table}")
         return row_count
 
     except Exception as e:
-        print(f"❌ ERROR processing table '{table_name}':")
+        print(f"ERROR processing table '{table_name}':")
         print(e)
         import traceback
         traceback.print_exc()
@@ -70,14 +70,14 @@ def load_gold_to_postgres(table_name):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: spark-submit 6_load_gold_to_postgres_parquet.py <table_name>")
+        print("Usage: spark-submit load_gold_to_postgres_parquet.py <table_name>")
         sys.exit(1)
     
     table_to_load = sys.argv[1]
     rows_loaded = load_gold_to_postgres(table_to_load)
     
     if rows_loaded > 0:
-        print(f"\n🎉 PIPELINE SUCCESS: {table_to_load} with {rows_loaded} rows")
+        print(f"\nPIPELINE SUCCESS: {table_to_load} with {rows_loaded} rows")
     else:
-        print(f"\n❌ PIPELINE FAILED: {table_to_load}")
+        print(f"\nPIPELINE FAILED: {table_to_load}")
         sys.exit(1)

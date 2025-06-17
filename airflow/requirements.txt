@@ -12,3 +12,5 @@ snowflake-sqlalchemy==1.7.3
 SQLAlchemy==1.4.53
 python-dotenv==1.1.0
 dotenv==0.9.9
+dbt-core==1.9.8
+dbt-spark[PyHive]==1.9.2

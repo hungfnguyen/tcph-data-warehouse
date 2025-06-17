@@ -4,10 +4,6 @@ import sys
 from pyspark.sql import SparkSession
 
 def load_gold_to_postgres(table_name):
-    """
-    Một Spark job để đọc một bảng từ lớp Gold trong MinIO (định dạng Parquet)
-    và ghi nó vào database PostgreSQL.
-    """
     if not table_name:
         print("ERROR: Table name is required.")
         sys.exit(1)
