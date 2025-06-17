@@ -19,7 +19,8 @@ dbt/logs/
 # OS
 .DS_Store
 Thumbs.db
-
 logs
+
+# Large JAR files - download via script
 jars/aws-java-sdk-bundle-1.12.674.jar
 jars/hadoop-aws-3.3.4.jar
