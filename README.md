@@ -9,6 +9,13 @@
 ### Data Warehouse Schema
 ![Data Warehouse Schema](images/dw_architecture.png)
 
+## Dashboards
+
+### 1. Executive Business Overview
+
+This dashboard provides a high-level overview of core business metrics, intended for management and executive-level stakeholders.
+
+![Executive Business Overview Dashboard](images/executive_overview_dashboard.png)
 
 ## Quick Start
 
