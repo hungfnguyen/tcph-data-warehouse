@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/metabase:/docker-entrypoint-initdb.d
     networks:
       - tcph-network
     healthcheck:
@@ -171,12 +172,49 @@ services:
     depends_on:
       - spark-master
       - minio
+
+    # Metabase for BI/Analytics
+  metabase:
+    image: metabase/metabase:latest
+    container_name: tcph-metabase
+    restart: unless-stopped
+    environment:
+      # Metabase database configuration (using PostgreSQL)
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: postgres
+      MB_DB_PASS: postgres123
+      MB_DB_HOST: postgres
+      # Optional: Configure SMTP for email notifications
+      # MB_EMAIL_SMTP_HOST: smtp.gmail.com
+      # MB_EMAIL_SMTP_PORT: 587
+      # MB_EMAIL_SMTP_SECURITY: tls
+      # MB_EMAIL_SMTP_USERNAME: your-email@gmail.com
+      # MB_EMAIL_SMTP_PASSWORD: your-app-password
+      # Performance settings
+      JAVA_TOOL_OPTIONS: "-Xmx2g"
+    ports:
+      - "3000:3000"  # Metabase Web UI
+    volumes:
+      - metabase_data:/metabase-data
+    networks:
+      - tcph-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     
   
 volumes:
   postgres_data:
   pgadmin_data:
   minio_data:
+  metabase_data:
 
 networks:
   tcph-network:
