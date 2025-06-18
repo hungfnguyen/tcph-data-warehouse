@@ -17,6 +17,12 @@ This dashboard provides a high-level overview of core business metrics, intended
 
 ![Executive Business Overview Dashboard](images/executive_overview_dashboard.png)
 
+### 2. Sales & Customer Deep Dive
+
+This dashboard provides a deep dive into revenue by product, the purchasing behavior of top customers, and revenue trends over time.
+
+![Sales & Customer Deep Dive Dashboard](images/sales_customer_dashboard.png)
+
 ## Quick Start
 
 ```bash
