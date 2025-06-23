@@ -6,6 +6,12 @@
 ### Pipeline Overview
 ![Architecture](images/architecture.jpg)
 
+### Pipeline Orchestration
+
+The entire ELT pipeline is orchestrated as a single, end-to-end Directed Acyclic Graph (DAG) in Apache Airflow. This graph visualizes the flow from data extraction (Bronze), through transformation (Silver), dbt modeling (Gold), and finally loading into the data warehouse.
+
+![Pipeline Orchestration in Airflow](images/airflow_dag_success.png)
+
 ### Data Warehouse Schema
 ![Data Warehouse Schema](images/dw_architecture.png)
 
