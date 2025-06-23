@@ -6,7 +6,7 @@ from airflow.operators.bash import BashOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
 DBT_PROJECT_DIR = "/opt/airflow/dbt_tcph"
-SPARK_JOBS_DIR = "/opt/airflow/spark_jobs"
+SPARK_JOBS_DIR = "/opt/airflow/scripts/load_to_dw"
 JARS_DIR = "/opt/airflow/jars"
 
 ALL_JARS = ",".join([
@@ -37,7 +37,7 @@ with DAG(
         for tbl in DIM_TABLES:
             SparkSubmitOperator(
                 task_id=f"load_{tbl}",
-                application=f"{SPARK_JOBS_DIR}/load_gold_to_postgres_parquet.py",
+                application=f"{SPARK_JOBS_DIR}/load_gold_to_postgres.py",
                 application_args=[tbl],
                 conn_id="spark_default",
                 jars=ALL_JARS,
@@ -51,7 +51,7 @@ with DAG(
     for tbl in FACT_TABLES:
         fact_task = SparkSubmitOperator(
             task_id=f"load_{tbl}",
-            application=f"{SPARK_JOBS_DIR}/load_gold_to_postgres_parquet.py",
+            application=f"{SPARK_JOBS_DIR}/load_gold_to_postgres.py",
             application_args=[tbl],
             conn_id="spark_default",
             jars=ALL_JARS,
